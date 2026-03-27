@@ -1,0 +1,62 @@
+{
+  "name": "TransportMap — Grand Abidjan",
+  "short_name": "TransportMap",
+  "description": "Trouvez votre itineraire, arrets et lignes de transport a Abidjan. Bus SOTRA, Gbaka, Woro-Woro, Bateau-bus.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#040810",
+  "theme_color": "#22d3ee",
+  "orientation": "any",
+  "lang": "fr",
+  "dir": "ltr",
+  "categories": ["navigation", "transportation", "travel"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Itineraire",
+      "short_name": "Itineraire",
+      "description": "Calculer un itineraire A vers B",
+      "url": "/?mode=itineraire",
+      "icons": [
+        {
+          "src": "/icons/icon-192.svg",
+          "sizes": "192x192",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Arret proche",
+      "short_name": "Proche",
+      "description": "Trouver l'arret le plus proche",
+      "url": "/?mode=nearby",
+      "icons": [
+        {
+          "src": "/icons/icon-192.svg",
+          "sizes": "192x192",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx vite:*)",
+      "Bash(npm install:*)",
+      "Bash(ls \"C:\\\\Users\\\\APROMAC\\\\Downloads\\\\transport-abidjan_1\\\\transport-abidjan\\\\public\"\" 2>/dev/null; cat \"C:UsersAPROMACDownloadstransport-abidjan_1transport-abidjanindex.html\" 2>/dev/null || cat \"C:UsersAPROMACDownloadstransport-abidjan_1transport-abidjanpublicindex.html \")",
+      "Bash(grep -E \"\\\\.\\(js|jsx|ts|tsx\\)$\")",
+      "Bash(python3:*)",
+      "Bash(npm run:*)",
+      "Bash(ls \"C:\\\\Users\\\\APROMAC\\\\Downloads\\\\transport-abidjan_1\\\\transport-abidjan\\\\data_clean\"\" 2>/dev/null || ls \"C:UsersAPROMACDownloadstransport-abidjan_1transport-abidjandata_clean\" 2>/dev/null || find \"C:UsersAPROMACDownloadstransport-abidjan_1transport-abidjan\" -type d -name \"data_clean* \")",
+      "Bash(python scripts/migrate_add_columns.py)",
+      "Bash(pip install:*)",
+      "Bash(C:Python312python.exe scripts/migrate_add_columns.py)",
+      "Bash(curl -s \"http://localhost:8000/api/itineraire?from_lon=-4.02&from_lat=5.35&to_lon=-3.98&to_lat=5.31\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173)",
+      "Bash(grep -r \"TODO\\\\|FIXME\\\\|BUG\\\\|HACK\" /c/Users/APROMAC/Downloads/transport-abidjan_1/transport-abidjan/src --include=*.jsx --include=*.js)",
+      "Bash(grep -v \"^$\")",
+      "Bash(grep -E \"\\\\.\\(jsx|js|py|json|md|docx\\)$\")",
+      "Bash(find /c/Users/APROMAC/Downloads/transport-abidjan_1/transport-abidjan -name *.css -o -name *.scss)",
+      "Bash(python -c \"import ast; ast.parse\\(open\\(''api/main.py'', encoding=''utf-8''\\).read\\(\\)\\); print\\(''Syntaxe OK''\\)\")",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(python -c \"import py_compile; py_compile.compile\\(''api/main.py'', doraise=True\\)\")"
+    ]
+  }
+}
