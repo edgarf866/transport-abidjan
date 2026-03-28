@@ -661,12 +661,12 @@ html, body, #root {
   /* Panneaux cachés par défaut sur mobile */
   .panel-left-col {
     position: fixed;
-    top: calc(92px + env(safe-area-inset-top, 0px));
+    top: 92px;
     left: -300px;
     width: 220px;
     gap: 6px;
-    max-height: calc(100vh - 160px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
-    max-height: calc(100dvh - 160px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    max-height: calc(100vh - 160px);
+    max-height: calc(100dvh - 160px);
     transition: left 0.3s ease;
     z-index: 1200;
   }
@@ -680,12 +680,12 @@ html, body, #root {
 
   .panel-right-col {
     position: fixed;
-    top: calc(92px + env(safe-area-inset-top, 0px));
+    top: 92px;
     right: -300px;
     width: 240px;
     gap: 6px;
-    max-height: calc(100vh - 160px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
-    max-height: calc(100dvh - 160px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    max-height: calc(100vh - 160px);
+    max-height: calc(100dvh - 160px);
     transition: right 0.3s ease;
     z-index: 1200;
   }
@@ -719,7 +719,7 @@ html, body, #root {
   .travel-panel-mobile {
     display: block;
     position: fixed;
-    top: calc(92px + env(safe-area-inset-top, 0px));
+    top: 92px;
     left: 8px;
     right: 8px;
     bottom: 60px;
@@ -765,7 +765,7 @@ html, body, #root {
   /* Bannière install en haut sur mobile */
   .install-prompt-container {
     bottom: auto !important;
-    top: calc(90px + env(safe-area-inset-top, 0px)) !important;
+    top: 90px !important;
     animation: installSlideDown 0.4s ease !important;
   }
 }
@@ -792,12 +792,12 @@ html, body, #root {
   }
 
   .panel-left-col {
-    top: calc(92px + env(safe-area-inset-top, 0px));
+    top: 92px;
     width: 200px;
   }
 
   .panel-right-col {
-    top: calc(92px + env(safe-area-inset-top, 0px));
+    top: 92px;
     width: 210px;
   }
 
