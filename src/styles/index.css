@@ -138,7 +138,8 @@
 
 html, body, #root {
   width: 100%;
-  height: 100%;
+  height: 100vh;
+  height: 100dvh; /* viewport dynamique — s'adapte aux barres du navigateur */
   overflow: hidden;
   background: var(--bg-void);
   color: var(--text-primary);
@@ -197,6 +198,7 @@ html, body, #root {
   flex-direction: column;
   gap: 8px;
   max-height: calc(100vh - 130px);
+  max-height: calc(100dvh - 130px);
   overflow-y: auto;
   pointer-events: none;
 }
@@ -216,6 +218,7 @@ html, body, #root {
   flex-direction: column;
   gap: 8px;
   max-height: calc(100vh - 130px);
+  max-height: calc(100dvh - 130px);
   overflow-y: auto;
   pointer-events: none;
   transition: width 0.3s ease;
@@ -658,32 +661,40 @@ html, body, #root {
   /* Panneaux cachés par défaut sur mobile */
   .panel-left-col {
     position: fixed;
-    top: 92px;
+    top: calc(92px + env(safe-area-inset-top, 0px));
     left: -300px;
     width: 220px;
     gap: 6px;
-    max-height: calc(100vh - 160px);
+    max-height: calc(100vh - 160px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    max-height: calc(100dvh - 160px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
     transition: left 0.3s ease;
     z-index: 1200;
   }
 
   .panel-left-col.mobile-visible {
     left: 8px;
+    pointer-events: auto; /* Permettre le scroll au doigt */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* Scroll fluide iOS */
   }
 
   .panel-right-col {
     position: fixed;
-    top: 92px;
+    top: calc(92px + env(safe-area-inset-top, 0px));
     right: -300px;
     width: 240px;
     gap: 6px;
-    max-height: calc(100vh - 160px);
+    max-height: calc(100vh - 160px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    max-height: calc(100dvh - 160px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
     transition: right 0.3s ease;
     z-index: 1200;
   }
 
   .panel-right-col.mobile-visible {
     right: 8px;
+    pointer-events: auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .panel-right-col.itinerary-active {
@@ -708,12 +719,13 @@ html, body, #root {
   .travel-panel-mobile {
     display: block;
     position: fixed;
-    top: 92px;
+    top: calc(92px + env(safe-area-inset-top, 0px));
     left: 8px;
     right: 8px;
-    bottom: 60px;
+    bottom: calc(60px + env(safe-area-inset-bottom, 0px));
     z-index: 1300;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     border-radius: var(--panel-radius);
   }
 
@@ -721,7 +733,7 @@ html, body, #root {
   .mobile-toggle-bar {
     display: flex;
     position: fixed;
-    bottom: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
     left: 50%;
     transform: translateX(-50%);
     z-index: 1100;
@@ -730,12 +742,12 @@ html, body, #root {
 
   /* FABs repositionnés sur mobile */
   .travel-fab {
-    bottom: 10px !important;
+    bottom: calc(10px + env(safe-area-inset-bottom, 0px)) !important;
     right: 16px !important;
   }
 
   .contribute-fab {
-    bottom: 62px !important;
+    bottom: calc(62px + env(safe-area-inset-bottom, 0px)) !important;
     right: 16px !important;
   }
 
@@ -745,14 +757,15 @@ html, body, #root {
     max-width: calc(100vw - 24px) !important;
     right: 12px !important;
     left: 12px !important;
-    bottom: 120px !important;
-    max-height: calc(100vh - 180px) !important;
+    bottom: calc(120px + env(safe-area-inset-bottom, 0px)) !important;
+    max-height: calc(100vh - 180px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
+    max-height: calc(100dvh - 180px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
   }
 
   /* Bannière install en haut sur mobile */
   .install-prompt-container {
     bottom: auto !important;
-    top: 90px !important;
+    top: calc(90px + env(safe-area-inset-top, 0px)) !important;
     animation: installSlideDown 0.4s ease !important;
   }
 }
@@ -779,12 +792,12 @@ html, body, #root {
   }
 
   .panel-left-col {
-    top: 92px;
+    top: calc(92px + env(safe-area-inset-top, 0px));
     width: 200px;
   }
 
   .panel-right-col {
-    top: 92px;
+    top: calc(92px + env(safe-area-inset-top, 0px));
     width: 210px;
   }
 
@@ -793,7 +806,7 @@ html, body, #root {
   }
 
   .mobile-toggle-bar {
-    bottom: 10px;
+    bottom: calc(10px + env(safe-area-inset-bottom, 0px));
     gap: 8px;
   }
 
@@ -803,12 +816,12 @@ html, body, #root {
   }
 
   .travel-fab {
-    bottom: 8px !important;
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px)) !important;
     right: 12px !important;
   }
 
   .contribute-fab {
-    bottom: 58px !important;
+    bottom: calc(58px + env(safe-area-inset-bottom, 0px)) !important;
     right: 12px !important;
   }
 }

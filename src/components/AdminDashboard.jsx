@@ -247,7 +247,7 @@ export default function AdminDashboard({ onClose }) {
     top: 0,
     left: 0,
     width: '100vw',
-    height: '100vh',
+    height: '100dvh',
     zIndex: 9000,
     background: 'var(--bg-void)',
     display: 'flex',
@@ -272,7 +272,7 @@ export default function AdminDashboard({ onClose }) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          minHeight: '100vh',
+          minHeight: '100dvh',
         }}>
           <div style={{
             background: 'var(--metric-card-bg)',

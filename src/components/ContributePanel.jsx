@@ -953,7 +953,7 @@ export default function ContributePanel({
   return (
     <div style={{
       width: '100%',
-      maxHeight: 'calc(100vh - 160px)',
+      maxHeight: 'calc(100dvh - 160px)',
       overflowY: 'auto',
       display: 'flex',
       flexDirection: 'column',

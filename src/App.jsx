@@ -139,7 +139,7 @@ export default function App() {
   return (
     <div style={{
       width: '100vw',
-      height: '100vh',
+      height: '100dvh',
       position: 'relative',
       overflow: 'hidden',
       background: 'var(--bg-void)',
@@ -287,15 +287,15 @@ export default function App() {
           setShowContribute(next);
           if (!next) { setContributePickMode(false); setContributeMapClick(null); }
           // Fermer les autres panneaux sur mobile
-          if (next) { setMobileLeft(false); setMobileRight(false); }
+          if (next) { setMobileLeft(false); setMobileRight(false); setShowTravel(false); }
         }}
         title="Contribuer"
         className="contribute-fab"
         style={{
           position: 'absolute',
-          bottom: 112,
+          bottom: 130,
           right: 20,
-          zIndex: 1000,
+          zIndex: 1400,
           width: 44, height: 44,
           borderRadius: '50%',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -325,7 +325,7 @@ export default function App() {
           zIndex: 1100,
           width: 340,
           maxWidth: 'calc(100vw - 24px)',
-          maxHeight: 'calc(100vh - 180px)',
+          maxHeight: 'calc(100dvh - 180px)',
           overflowY: 'auto',
         }}>
           <div className="glass-panel-solid">
@@ -391,9 +391,9 @@ export default function App() {
         className="travel-fab"
         style={{
           position: 'absolute',
-          bottom: 60,
+          bottom: 78,
           right: 20,
-          zIndex: 1000,
+          zIndex: 1400,
           width: 44, height: 44,
           borderRadius: '50%',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
