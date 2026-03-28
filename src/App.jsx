@@ -293,7 +293,7 @@ export default function App() {
         className="contribute-fab"
         style={{
           position: 'absolute',
-          bottom: 130,
+          bottom: 112,
           right: 20,
           zIndex: 1400,
           width: 44, height: 44,
@@ -391,7 +391,7 @@ export default function App() {
         className="travel-fab"
         style={{
           position: 'absolute',
-          bottom: 78,
+          bottom: 60,
           right: 20,
           zIndex: 1400,
           width: 44, height: 44,
