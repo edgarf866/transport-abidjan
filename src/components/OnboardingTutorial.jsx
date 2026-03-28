@@ -1,45 +1,66 @@
 import { useState, useEffect } from 'react';
-import { ChevronRight, ChevronLeft, X, Search, Layers, Filter, MapPin, MousePointer } from 'lucide-react';
+import { ChevronRight, ChevronLeft, X, Search, Layers, Filter, MapPin, MousePointer, Navigation, PenLine, AlertTriangle } from 'lucide-react';
 
 const STEPS = [
   {
     icon: '🗺️',
     title: 'Bienvenue sur TransportMap',
-    desc: 'Explorez le reseau de transport du Grand Abidjan en temps reel. Naviguez sur la carte, zoomez et cliquez sur les elements pour en savoir plus.',
+    desc: 'Explorez le réseau de transport du Grand Abidjan en temps réel. Naviguez sur la carte, zoomez et cliquez sur les éléments pour en savoir plus.',
     target: null,
   },
   {
     icon: '🔍',
     title: 'Recherche rapide',
-    desc: 'Utilisez la barre de recherche en haut pour trouver un arret, une ligne, une gare ou une commune par nom. La carte zoomera automatiquement sur le resultat.',
+    desc: 'Utilisez la barre de recherche en haut pour trouver un arrêt, une ligne, une gare ou une commune par nom. La carte zoomera automatiquement sur le résultat.',
     target: 'search',
     IconComp: Search,
   },
   {
     icon: '📂',
-    title: 'Couches de donnees',
-    desc: 'Activez ou desactivez les couches a gauche : lignes de bus, arrets, gares, routes, communes, transport lagunaire et voies ferrees.',
+    title: 'Couches de données',
+    desc: 'Activez ou désactivez les couches à gauche : lignes de bus, arrêts, gares, routes, communes, transport lagunaire et voies ferrées.',
     target: 'layers',
     IconComp: Layers,
   },
   {
     icon: '🎯',
-    title: 'Filtre par operateur',
-    desc: 'Filtrez les arrets par operateur : SOTRA (reseau formel) ou Informel (gbaka, woro-woro). Pratique pour comparer les reseaux.',
+    title: 'Filtre par opérateur',
+    desc: 'Filtrez les arrêts par opérateur : SOTRA (réseau formel) ou Informel (gbaka, woro-woro). Pratique pour comparer les réseaux.',
     target: 'filter',
     IconComp: Filter,
   },
   {
     icon: '📍',
     title: 'Cliquez pour explorer',
-    desc: 'Cliquez sur une ligne, un arret ou une gare pour voir ses details. Les clusters orange regroupent les arrets : cliquez pour zoomer.',
+    desc: 'Cliquez sur une ligne, un arrêt ou une gare pour voir ses détails. Les clusters orange regroupent les arrêts : cliquez pour zoomer.',
     target: 'map',
     IconComp: MapPin,
   },
   {
+    icon: '🧭',
+    title: 'Itinéraire multimodal',
+    desc: 'Appuyez sur le bouton avion en bas à droite pour calculer un trajet A → B. Combinez bus, gbaka, woro-woro et marche à pied pour trouver le meilleur itinéraire.',
+    target: 'travel',
+    IconComp: Navigation,
+  },
+  {
+    icon: '📝',
+    title: 'Contribuer',
+    desc: 'Aidez à enrichir la carte ! Le bouton 📝 au-dessus permet de signaler un arrêt manquant, corriger un nom, proposer un trajet ou signaler une alerte.',
+    target: 'contribute',
+    IconComp: PenLine,
+  },
+  {
+    icon: '⚠️',
+    title: 'Alertes en temps réel',
+    desc: 'Un bandeau jaune apparaît en haut quand des alertes transport sont actives (route coupée, grève, déviation). Cliquez dessus pour voir le lieu concerné.',
+    target: 'alerts',
+    IconComp: AlertTriangle,
+  },
+  {
     icon: '🌓',
     title: 'Mode clair / sombre',
-    desc: 'Utilisez le bouton soleil/lune dans la barre du haut pour basculer entre le theme sombre et clair selon votre environnement.',
+    desc: 'Utilisez le bouton soleil/lune dans la barre du haut pour basculer entre le thème sombre et clair selon votre environnement.',
     target: 'theme',
     IconComp: MousePointer,
   },
@@ -54,11 +75,23 @@ export default function OnboardingTutorial() {
   useEffect(() => {
     try {
       const done = localStorage.getItem(STORAGE_KEY);
-      if (!done) {
-        // Petit délai pour laisser la carte charger
-        const t = setTimeout(() => setVisible(true), 1500);
-        return () => clearTimeout(t);
-      }
+      if (done) return;
+
+      // Attendre que la bannière install soit fermée ou absente avant d'afficher le guide
+      // La bannière install s'affiche après 5s, on attend un peu plus
+      const checkAndShow = () => {
+        const installBanner = document.querySelector('[data-install-prompt]');
+        if (installBanner) {
+          // La bannière install est visible, on réessaie dans 2s
+          const retry = setTimeout(checkAndShow, 2000);
+          return () => clearTimeout(retry);
+        }
+        setVisible(true);
+      };
+
+      // Délai initial : 8s (après les 5s de la bannière install + marge)
+      const t = setTimeout(checkAndShow, 8000);
+      return () => clearTimeout(t);
     } catch {}
   }, []);
 

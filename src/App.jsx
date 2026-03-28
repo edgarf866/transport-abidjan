@@ -225,10 +225,41 @@ export default function App() {
         <StatsPanel liveStats={transportData.stats} />
       </div>
 
-      {/* Right column */}
+      {/* Right column — contenu statique (détails, légende, branding) */}
       <div className={`panel-right-col ${mobileRight ? 'mobile-visible' : ''} ${showTravel && activeTab === 'itineraire' ? 'itinerary-active' : ''}`}>
-        {/* Travel Panel (toggle) */}
-        {showTravel ? (
+        {/* Travel Panel DESKTOP uniquement — sur mobile il est indépendant */}
+        <div className="travel-panel-desktop">
+          {showTravel ? (
+            <TravelPanel
+              onFlyTo={handleTravelFlyTo}
+              onSetMarker={handleSetMarker}
+              onRequestMapClick={handleRequestMapClick}
+              mapClickMode={mapClickMode}
+              departure={departure}
+              arrival={arrival}
+              onSetDeparture={handleSetDeparture}
+              onSetArrival={handleSetArrival}
+              onClearRoute={handleClearRoute}
+              routeResult={routeResult}
+              onSetRouteResult={setRouteResult}
+              onClose={() => setShowTravel(false)}
+              transportData={transportData}
+              onTabChange={setActiveTab}
+              onContribute={() => { setShowTravel(false); setShowContribute(true); setMobileLeft(false); setMobileRight(false); }}
+            />
+          ) : null}
+        </div>
+
+        {selection
+          ? <DetailPanel selection={selection} onClose={handleCloseDetail} />
+          : !showTravel ? <BrandingPanel /> : null
+        }
+        {(!showTravel || activeTab !== 'itineraire') && <LegendPanel />}
+      </div>
+
+      {/* Travel Panel MOBILE — indépendant, plein écran */}
+      {showTravel && (
+        <div className="travel-panel-mobile">
           <TravelPanel
             onFlyTo={handleTravelFlyTo}
             onSetMarker={handleSetMarker}
@@ -244,19 +275,20 @@ export default function App() {
             onClose={() => setShowTravel(false)}
             transportData={transportData}
             onTabChange={setActiveTab}
+            onContribute={() => { setShowTravel(false); setShowContribute(true); setMobileLeft(false); setMobileRight(false); }}
           />
-        ) : null}
-
-        {selection
-          ? <DetailPanel selection={selection} onClose={handleCloseDetail} />
-          : !showTravel ? <BrandingPanel /> : null
-        }
-        {(!showTravel || activeTab !== 'itineraire') && <LegendPanel />}
-      </div>
+        </div>
+      )}
 
       {/* Bouton flottant Contribuer 📝 */}
       <button
-        onClick={() => { setShowContribute(p => !p); if (showContribute) { setContributePickMode(false); setContributeMapClick(null); } }}
+        onClick={() => {
+          const next = !showContribute;
+          setShowContribute(next);
+          if (!next) { setContributePickMode(false); setContributeMapClick(null); }
+          // Fermer les autres panneaux sur mobile
+          if (next) { setMobileLeft(false); setMobileRight(false); }
+        }}
         title="Contribuer"
         className="contribute-fab"
         style={{
@@ -286,14 +318,14 @@ export default function App() {
 
       {/* Panneau de contribution */}
       {showContribute && (
-        <div style={{
+        <div className="contribute-panel-mobile" style={{
           position: 'fixed',
           bottom: 164,
           right: 12,
           zIndex: 1100,
           width: 340,
           maxWidth: 'calc(100vw - 24px)',
-          maxHeight: 'calc(100vh - 160px)',
+          maxHeight: 'calc(100vh - 180px)',
           overflowY: 'auto',
         }}>
           <div className="glass-panel-solid">
@@ -350,7 +382,12 @@ export default function App() {
 
       {/* Bouton flottant Info Voyageur */}
       <button
-        onClick={() => setShowTravel(p => !p)}
+        onClick={() => {
+          const next = !showTravel;
+          setShowTravel(next);
+          // Fermer les autres panneaux sur mobile
+          if (next) { setMobileLeft(false); setMobileRight(false); setShowContribute(false); setContributePickMode(false); setContributeMapClick(null); }
+        }}
         className="travel-fab"
         style={{
           position: 'absolute',
@@ -383,8 +420,18 @@ export default function App() {
       <MobileToggle
         showLeft={mobileLeft}
         showRight={mobileRight}
-        onToggleLeft={() => { setMobileLeft(p => !p); setMobileRight(false); }}
-        onToggleRight={() => { setMobileRight(p => !p); setMobileLeft(false); }}
+        onToggleLeft={() => {
+          const next = !mobileLeft;
+          setMobileLeft(next);
+          setMobileRight(false);
+          if (next) { setShowContribute(false); setContributePickMode(false); setContributeMapClick(null); }
+        }}
+        onToggleRight={() => {
+          const next = !mobileRight;
+          setMobileRight(next);
+          setMobileLeft(false);
+          if (next) { setShowContribute(false); setContributePickMode(false); setContributeMapClick(null); }
+        }}
       />
 
       {/* Bottom coords */}

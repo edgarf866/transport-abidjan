@@ -31,7 +31,7 @@ export default function BrandingPanel() {
         color: 'var(--cyan-dim)',
         marginTop: 2,
       }}>
-        MEDEV GROUP SARL
+        MEDEV
       </div>
       <div style={{
         fontFamily: 'var(--font-mono)',

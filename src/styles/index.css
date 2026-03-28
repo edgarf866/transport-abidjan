@@ -575,6 +575,17 @@ html, body, #root {
 }
 
 /* ============================================================ */
+/* TRAVEL PANEL — desktop/mobile switch                          */
+/* ============================================================ */
+.travel-panel-desktop {
+  display: contents;
+}
+
+.travel-panel-mobile {
+  display: none;
+}
+
+/* ============================================================ */
 /* MOBILE TOGGLE BAR                                             */
 /* ============================================================ */
 .mobile-toggle-bar {
@@ -647,11 +658,11 @@ html, body, #root {
   /* Panneaux cachés par défaut sur mobile */
   .panel-left-col {
     position: fixed;
-    top: 90px;
+    top: 92px;
     left: -300px;
     width: 220px;
     gap: 6px;
-    max-height: calc(100vh - 120px);
+    max-height: calc(100vh - 160px);
     transition: left 0.3s ease;
     z-index: 1200;
   }
@@ -662,11 +673,11 @@ html, body, #root {
 
   .panel-right-col {
     position: fixed;
-    top: 90px;
+    top: 92px;
     right: -300px;
     width: 240px;
     gap: 6px;
-    max-height: calc(100vh - 120px);
+    max-height: calc(100vh - 160px);
     transition: right 0.3s ease;
     z-index: 1200;
   }
@@ -684,16 +695,71 @@ html, body, #root {
     right: 8px;
   }
 
+  /* Cacher les coordonnées sur mobile (pas de survol tactile) */
+  .coords-hud {
+    display: none !important;
+  }
+
+  /* Travel panel : cacher la version desktop, afficher la version mobile */
+  .travel-panel-desktop {
+    display: none !important;
+  }
+
+  .travel-panel-mobile {
+    display: block;
+    position: fixed;
+    top: 92px;
+    left: 8px;
+    right: 8px;
+    bottom: 60px;
+    z-index: 1300;
+    overflow-y: auto;
+    border-radius: var(--panel-radius);
+  }
+
   /* Boutons toggle visibles */
   .mobile-toggle-bar {
     display: flex;
     position: fixed;
-    bottom: 40px;
+    bottom: 12px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 1100;
     gap: 12px;
   }
+
+  /* FABs repositionnés sur mobile */
+  .travel-fab {
+    bottom: 10px !important;
+    right: 16px !important;
+  }
+
+  .contribute-fab {
+    bottom: 62px !important;
+    right: 16px !important;
+  }
+
+  /* Panneau contribution adapté mobile */
+  .contribute-panel-mobile {
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+    right: 12px !important;
+    left: 12px !important;
+    bottom: 120px !important;
+    max-height: calc(100vh - 180px) !important;
+  }
+
+  /* Bannière install en haut sur mobile */
+  .install-prompt-container {
+    bottom: auto !important;
+    top: 90px !important;
+    animation: installSlideDown 0.4s ease !important;
+  }
+}
+
+@keyframes installSlideDown {
+  from { opacity: 0; transform: translateX(-50%) translateY(-30px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
 /* Petit mobile (< 480px) */
@@ -713,12 +779,12 @@ html, body, #root {
   }
 
   .panel-left-col {
-    top: 80px;
+    top: 92px;
     width: 200px;
   }
 
   .panel-right-col {
-    top: 80px;
+    top: 92px;
     width: 210px;
   }
 
@@ -727,7 +793,7 @@ html, body, #root {
   }
 
   .mobile-toggle-bar {
-    bottom: 32px;
+    bottom: 10px;
     gap: 8px;
   }
 
@@ -735,6 +801,21 @@ html, body, #root {
     width: 36px;
     height: 36px;
   }
+
+  .travel-fab {
+    bottom: 8px !important;
+    right: 12px !important;
+  }
+
+  .contribute-fab {
+    bottom: 58px !important;
+    right: 12px !important;
+  }
+}
+
+/* Spinner global */
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 /* CoordsHUD responsive */

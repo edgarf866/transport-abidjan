@@ -315,7 +315,7 @@ function LocationInput({
               style={{
                 position: 'absolute', top: '100%', left: 0, right: 0,
                 zIndex: 100, marginTop: 4,
-                maxHeight: 200, overflowY: 'auto',
+                maxHeight: 'calc(100vh - 300px)', overflowY: 'auto',
                 background: 'var(--bg-elevated)',
                 border: '1px solid var(--glass-border)',
                 borderRadius: 8,
@@ -989,9 +989,10 @@ function ItineraireCard({ itineraire, index, isExpanded, onToggle, onFlyTo }) {
 
 // ─── Sous-composant : Itinéraire A→B avec 3 modes ───
 
-function ItineraireTab({ departure, arrival, onSetDeparture, onSetArrival, onRequestMapClick, mapClickMode, onFlyTo, onClearRoute, routeResult, onSetRouteResult, searchIndex }) {
+function ItineraireTab({ departure, arrival, onSetDeparture, onSetArrival, onRequestMapClick, mapClickMode, onFlyTo, onClearRoute, routeResult, onSetRouteResult, searchIndex, onContribute }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [showNoResultPopup, setShowNoResultPopup] = useState(false);
   const [expanded, setExpanded] = useState(0);
 
   const search = useCallback(async () => {
@@ -1005,7 +1006,7 @@ function ItineraireTab({ departure, arrival, onSetDeparture, onSetArrival, onReq
       if (!result) {
         setError('Impossible de contacter le serveur');
       } else if (!result.itineraires?.length) {
-        setError(result.message || 'Aucun itinéraire trouvé. Essayez des points plus proches du réseau de transport.');
+        setShowNoResultPopup(true);
       } else {
         onSetRouteResult(result);
         setExpanded(0);
@@ -1098,7 +1099,7 @@ function ItineraireTab({ departure, arrival, onSetDeparture, onSetArrival, onReq
             ? <Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} />
             : <Navigation size={14} />
           }
-          {loading ? 'Calcul...' : 'Chercher itinéraire'}
+          {loading ? 'Recherche itinéraire...' : 'Chercher itinéraire'}
         </button>
         {distance != null && (
           <span style={{
@@ -1123,7 +1124,7 @@ function ItineraireTab({ departure, arrival, onSetDeparture, onSetArrival, onReq
         </button>
       </div>
 
-      {/* Erreur */}
+      {/* Erreur serveur */}
       {error && (
         <div style={{
           padding: '8px 12px', borderRadius: 8,
@@ -1132,6 +1133,106 @@ function ItineraireTab({ departure, arrival, onSetDeparture, onSetArrival, onReq
         }}>
           {error}
         </div>
+      )}
+
+      {/* Popup aucun itinéraire trouvé */}
+      {showNoResultPopup && (
+        <>
+          <div
+            onClick={() => setShowNoResultPopup(false)}
+            style={{
+              position: 'fixed', inset: 0,
+              background: 'rgba(0,0,0,0.55)',
+              zIndex: 10000,
+              animation: 'fadeIn 0.3s ease',
+            }}
+          />
+          <div style={{
+            position: 'fixed',
+            top: '50%', left: '50%',
+            transform: 'translate(-50%, -50%)',
+            zIndex: 10000,
+            width: 340,
+            maxWidth: 'calc(100vw - 32px)',
+            background: 'var(--bg-surface)',
+            border: '1px solid var(--glass-border)',
+            borderRadius: 16,
+            boxShadow: '0 20px 60px rgba(0,0,0,0.4)',
+            overflow: 'hidden',
+            animation: 'fadeInUp 0.4s ease',
+          }}>
+            {/* Header */}
+            <div style={{
+              padding: '24px 24px 16px',
+              textAlign: 'center',
+              borderBottom: '1px solid var(--glass-border)',
+            }}>
+              <div style={{ fontSize: 40, marginBottom: 8 }}>🚫</div>
+              <h3 style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 16, fontWeight: 700,
+                color: 'var(--text-primary)',
+                margin: 0,
+              }}>
+                Aucun itinéraire disponible
+              </h3>
+            </div>
+
+            {/* Body */}
+            <div style={{
+              padding: '16px 24px',
+              fontFamily: 'var(--font-display)',
+              fontSize: 13, lineHeight: 1.6,
+              color: 'var(--text-secondary)',
+              textAlign: 'center',
+            }}>
+              Nous n'avons pas trouvé de trajet entre ces deux points. Vous pouvez nous aider en contribuant à enrichir le réseau de transport !
+            </div>
+
+            {/* Actions */}
+            <div style={{
+              display: 'flex', alignItems: 'center',
+              justifyContent: 'center',
+              padding: '12px 24px 20px',
+              gap: 10,
+            }}>
+              <button
+                onClick={() => setShowNoResultPopup(false)}
+                style={{
+                  padding: '8px 16px', borderRadius: 8,
+                  border: '1px solid var(--glass-border)',
+                  background: 'transparent',
+                  color: 'var(--text-secondary)',
+                  fontFamily: 'var(--font-display)',
+                  fontSize: 12, cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}
+              >
+                Fermer
+              </button>
+              <button
+                onClick={() => {
+                  setShowNoResultPopup(false);
+                  if (onContribute) onContribute();
+                }}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 6,
+                  padding: '8px 20px', borderRadius: 8,
+                  border: 'none',
+                  background: 'var(--emerald)',
+                  color: '#fff',
+                  fontFamily: 'var(--font-display)',
+                  fontSize: 12, fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  boxShadow: '0 2px 8px rgba(52, 211, 153, 0.3)',
+                }}
+              >
+                📝 Contribuer
+              </button>
+            </div>
+          </div>
+        </>
       )}
 
       {/* Alertes actives globales */}
@@ -1209,6 +1310,7 @@ export default function TravelPanel({
   onClose,
   transportData,
   onTabChange,
+  onContribute,
 }) {
   const [tab, setTab] = useState('nearby');
 
@@ -1323,6 +1425,7 @@ export default function TravelPanel({
             routeResult={routeResult}
             onSetRouteResult={onSetRouteResult}
             searchIndex={searchIndex}
+            onContribute={onContribute}
           />
         )}
       </div>

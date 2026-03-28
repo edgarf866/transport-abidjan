@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Download, X, Share, Plus } from 'lucide-react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { Download, X, Share, Plus, ExternalLink } from 'lucide-react';
 
 /**
  * InstallPrompt — Bannière d'installation PWA
@@ -14,7 +14,9 @@ const DISMISS_KEY = 'transportmap_install_dismissed';
 const DISMISS_DAYS = 7;
 
 function isIOS() {
-  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  // iPhone/iPod classique + iPad moderne (iPadOS 13+ se déclare "Macintosh")
+  return (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream)
+    || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 }
 
 function isInStandaloneMode() {
@@ -47,25 +49,21 @@ export default function InstallPrompt() {
     const handleBeforeInstall = (e) => {
       e.preventDefault();
       setDeferredPrompt(e);
-      // Attendre 20s avant d'afficher pour ne pas agresser l'utilisateur
-      setTimeout(() => setShowBanner(true), 20000);
+      // Afficher après 5s
+      setTimeout(() => setShowBanner(true), 5000);
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstall);
 
-    // iOS : afficher apres 25s si c'est un iPhone/iPad sur Safari
+    // iOS : afficher sur TOUS les navigateurs (Safari, Chrome, Firefox)
+    // Chrome/Firefox sur iOS utilisent WebKit, l'install passe par le même procédé
     if (isIOS()) {
-      const isChrome = /CriOS/.test(navigator.userAgent);
-      const isFirefox = /FxiOS/.test(navigator.userAgent);
-      // Seulement sur Safari natif (pas Chrome/Firefox iOS)
-      if (!isChrome && !isFirefox) {
-        setTimeout(() => {
-          if (!isInStandaloneMode()) {
-            setShowIOSGuide(true);
-            setShowBanner(true);
-          }
-        }, 25000);
-      }
+      setTimeout(() => {
+        if (!isInStandaloneMode()) {
+          setShowIOSGuide(true);
+          setShowBanner(true);
+        }
+      }, 5000);
     }
 
     return () => {
@@ -95,7 +93,7 @@ export default function InstallPrompt() {
   if (!showBanner) return null;
 
   return (
-    <div style={{
+    <div data-install-prompt className="install-prompt-container" style={{
       position: 'fixed',
       bottom: 70,
       left: '50%',
@@ -174,31 +172,7 @@ export default function InstallPrompt() {
 
           {/* iOS Guide */}
           {showIOSGuide && (
-            <div style={{
-              marginTop: 12, padding: '10px 12px',
-              borderRadius: 10,
-              background: 'rgba(255,255,255,0.03)',
-              border: '1px solid rgba(255,255,255,0.06)',
-            }}>
-              <div style={{
-                fontFamily: 'var(--font-mono, monospace)',
-                fontSize: 9, letterSpacing: 0.5,
-                color: '#64748b', marginBottom: 8,
-              }}>
-                COMMENT FAIRE
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <Step number="1" icon={<Share size={14} />}>
-                  Appuyez sur le bouton <strong style={{ color: '#22d3ee' }}>Partager</strong> en bas
-                </Step>
-                <Step number="2" icon={<Plus size={14} />}>
-                  Selectionnez <strong style={{ color: '#22d3ee' }}>"Sur l'ecran d'accueil"</strong>
-                </Step>
-                <Step number="3" icon={<Download size={14} />}>
-                  Appuyez sur <strong style={{ color: '#22d3ee' }}>Ajouter</strong>
-                </Step>
-              </div>
-            </div>
+            <IOSGuide />
           )}
 
           {/* Bouton installer (Android/Chrome) */}
@@ -267,6 +241,58 @@ export default function InstallPrompt() {
           to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
       `}</style>
+    </div>
+  );
+}
+
+// Sous-composant guide iOS — adapté selon Safari ou Chrome/Firefox
+function IOSGuide() {
+  const isNotSafari = /CriOS|FxiOS|OPiOS|EdgiOS/.test(navigator.userAgent);
+
+  return (
+    <div style={{
+      marginTop: 12, padding: '10px 12px',
+      borderRadius: 10,
+      background: 'rgba(255,255,255,0.03)',
+      border: '1px solid rgba(255,255,255,0.06)',
+    }}>
+      <div style={{
+        fontFamily: 'var(--font-mono, monospace)',
+        fontSize: 9, letterSpacing: 0.5,
+        color: '#64748b', marginBottom: 8,
+      }}>
+        COMMENT FAIRE
+      </div>
+
+      {isNotSafari && (
+        <div style={{
+          marginBottom: 10, padding: '8px 10px',
+          borderRadius: 8,
+          background: 'rgba(251, 191, 36, 0.08)',
+          border: '1px solid rgba(251, 191, 36, 0.2)',
+          display: 'flex', alignItems: 'center', gap: 8,
+        }}>
+          <ExternalLink size={14} style={{ color: '#fbbf24', flexShrink: 0 }} />
+          <span style={{
+            fontFamily: 'var(--font-display, -apple-system, sans-serif)',
+            fontSize: 11, color: '#fbbf24', lineHeight: '16px',
+          }}>
+            Ouvrez cette page dans <strong>Safari</strong> puis suivez les étapes ci-dessous
+          </span>
+        </div>
+      )}
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <Step number={isNotSafari ? "1" : "1"} icon={<Share size={14} />}>
+          Appuyez sur le bouton <strong style={{ color: '#22d3ee' }}>Partager</strong> en bas
+        </Step>
+        <Step number={isNotSafari ? "2" : "2"} icon={<Plus size={14} />}>
+          Sélectionnez <strong style={{ color: '#22d3ee' }}>"Sur l'écran d'accueil"</strong>
+        </Step>
+        <Step number={isNotSafari ? "3" : "3"} icon={<Download size={14} />}>
+          Appuyez sur <strong style={{ color: '#22d3ee' }}>Ajouter</strong>
+        </Step>
+      </div>
     </div>
   );
 }
